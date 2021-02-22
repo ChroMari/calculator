@@ -17,7 +17,7 @@ import objCalculator from './calculator-object';
 import errorNode from './calculator-error-view';
 
 import './style.css'
-// import './vanilla-tilt';
+import './vanilla-tilt';
 
 const { body } = document;
 const cardBody = viewCalculator('div', 'calculator');
@@ -50,7 +50,7 @@ const audio = new Audio();
 audio.src = 'klock.mp3';
 
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
-
+/* eslint no-param-reassign: ["error", { "props": false }] */
 class ButtonCalculator { // класс, который отвечает за нажатие кнопок калькулятора
   constructor(elem) {
     this._elem = elem;
@@ -61,26 +61,32 @@ class ButtonCalculator { // класс, который отвечает за н�
 
   allClear () {
     calculator.clear();
+    return this;
   }
   
   delete () {
     calculator.delete();
+    return this;
   }
   
   operation (textElement) {
     calculator.choseOperation(textElement);
+    return this;
   }
   
   number (textElement) {
     calculator.appendNumber(textElement);
+    return this;
   }
   
   equals () {
     calculator.compute(true);
+    return this;
   }
   
   sqrt () {
     calculator.sqrtOperation();
+    return this;
   }
   
   onClick (e) {
@@ -136,13 +142,14 @@ for (const item of objCalculator) {
   calculatorGrid.append(btn);
 }
 
-new ButtonCalculator(calculatorGrid);
-
+(()=>new ButtonCalculator(calculatorGrid))();
 
 cardBody.append(calculatorNumbers);
 
 body.prepend(cardBody);
-/*
+
+/* global VanillaTilt */
+/* eslint no-undef: "error" */
 const destroyBox = document.querySelectorAll(".calculator-numbers");
 const settings = {
     max: 15,
@@ -153,5 +160,5 @@ const settings = {
 
 const init = () => VanillaTilt.init(destroyBox, settings);
 init();
-*/
+
 

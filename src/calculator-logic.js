@@ -117,7 +117,7 @@ class Calculator {
     } else {
       this.previousOperandTextElement.innerText =  this.previousOperand;
     }
-    
+    return false;
   }
 }
 

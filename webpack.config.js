@@ -50,7 +50,6 @@ module.exports = {
     open: true,
     hot: isDev
   },
-  devtool: isDev ? 'source-map' : '',
   plugins: [
     new HTMLWebpackPlugin({
       template: './index.html',
