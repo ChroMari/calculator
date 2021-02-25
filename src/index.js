@@ -1,57 +1,27 @@
-/*
-  сначала нажимаем числа - потом нажимаем на знак корня и получаем результат (25 √ => 5)
-   //работает, но слишком долгий звук. Нужен звук куда короче по длительности
+/* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
+/* eslint no-param-reassign: ["error", { "props": false }] */
 
- */
+import Calculator from './js/logic/calculator-logic';
+import { renderNode } from './js/view/calculator-error-view';
+import render from './js/view/render';
+import vanillaTiltView from './js/view/vanillaTilt-view';
+import './styles/style.css';
+import audioSrc from './assets/audio/c.mp3';
 
- /*
-   var audio = new Audio(); // Создаём новый элемент Audio
-  audio.src = 'click.mp3'; // Указываем путь к звуку "клика"
-  audio.currentTime = 0;
-  audio.play();
- */
+const calculatorBody = render();
 
-import Calculator from './calculator-logic';
-import viewCalculator from './calculator-view';
-import objCalculator from './calculator-object';
-import errorNode from './calculator-error-view';
-
-import './style.css'
-import './vanilla-tilt';
-
-const { body } = document;
-const cardBody = viewCalculator('div', 'calculator');
-const output = viewCalculator('div', 'output');
-cardBody.append(output);
-const outputContainer = viewCalculator('div', 'output-container');
-output.append(outputContainer);
-
-const calculatorNumbers = viewCalculator('div', 'calculator-numbers');
-const calculatorGrid = viewCalculator('div', 'calculator-grid');
-calculatorNumbers.append(calculatorGrid);
-
-const previousOperandTextElement = viewCalculator('div', 'previous-operand');
-const currentOperandTextElement = viewCalculator('div', 'current-operand', undefined, '0');
+const previousOperandTextElement = calculatorBody.querySelector('.previous-operand');
+const currentOperandTextElement = calculatorBody.querySelector('.current-operand');
+const output = calculatorBody.querySelector('.output');
+const calculatorNumbers = calculatorBody.querySelector('.calculator-numbers');
+const calculatorGrid = calculatorBody.querySelector('.calculator-grid');
 
 const calculator = new Calculator(previousOperandTextElement, currentOperandTextElement);
 
-outputContainer.append(previousOperandTextElement, currentOperandTextElement);
-
-const error = errorNode();
-const errorBtn = error.querySelector('.error__btn');
-errorBtn.addEventListener('click', () => {
-  error.remove();
-  cardBody.append(output);
-  cardBody.append(calculatorNumbers);
-})
-
-
 const audio = new Audio();
-audio.src = 'klock.mp3';
+audio.src = audioSrc;
 
-/* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
-/* eslint no-param-reassign: ["error", { "props": false }] */
-class ButtonCalculator { // класс, который отвечает за нажатие кнопок калькулятора
+class ButtonCalculator {
   constructor(elem) {
     this._elem = elem;
     elem.onclick = this.onClick.bind(this);
@@ -102,7 +72,7 @@ class ButtonCalculator { // класс, который отвечает за н�
       if (isError) {
         calculatorNumbers.remove();
         output.remove();
-        cardBody.append(error);
+        renderNode(output, calculatorNumbers, calculatorBody);
       }
     }
   };
@@ -132,33 +102,8 @@ class ButtonCalculator { // класс, который отвечает за н�
   }
 }
 
- /* eslint no-restricted-syntax: ["off", "ForOfStatement"] */
-for (const item of objCalculator) {
-  const { action, textElement, key } = item;
-  const btn = viewCalculator('button', undefined,  action, textElement, key);
-  if (!/[0-9]/.test(+btn.textContent)) {
-    btn.classList.add('calculator-action');
-  }
-  calculatorGrid.append(btn);
-}
-
 (()=>new ButtonCalculator(calculatorGrid))();
 
-cardBody.append(calculatorNumbers);
-
-body.prepend(cardBody);
-
-/* global VanillaTilt */
-/* eslint no-undef: "error" */
-const destroyBox = document.querySelectorAll(".calculator-numbers");
-const settings = {
-    max: 15,
-    speed: 400,
-    glare: true,
-    "max-glare": 1 
-  };
-
-const init = () => VanillaTilt.init(destroyBox, settings);
-init();
+vanillaTiltView(calculatorNumbers);
 
 

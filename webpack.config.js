@@ -1,4 +1,5 @@
 const path = require('path');
+var SRC = path.resolve(__dirname, 'src/assets/');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -82,6 +83,10 @@ module.exports = {
         }, 'css-loader']
       },
       {
+        test: /\.mp3$/,
+        use: 'file-loader'
+      },
+      {
         test: /\.s[ac]ss$/,
         use: [          {
           loader: MiniCssExtractPlugin.loader,
@@ -89,22 +94,6 @@ module.exports = {
             publicPath: path.resolve(__dirname, 'dist') 
           },
         }, 'css-loader', 'sass-loader']
-      },
-      {
-        test: /\.(png|jpg|svg|gif)$/,
-        use: ['file-loader']
-      },
-      {
-        test: /\.(ttf|woff|woff2|eot)$/,
-        use: ['file-loader']
-      },
-      {
-        test: /\.xml$/,
-        use: ['xml-loader']
-      },
-      {
-        test: /\.csv$/,
-        use: ['csv-loader']
       },
 
       {

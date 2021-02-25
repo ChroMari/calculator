@@ -16,4 +16,15 @@ const errorNode = () => {
   return errorContainer;
 }
 
-export default errorNode;
+const renderNode = (output, calculatorNumbers, calculatorBody) => {
+  const error = errorNode(); 
+  const errorBtn = error.querySelector('.error__btn');
+  calculatorBody.append(error);
+  errorBtn.addEventListener('click', () => {
+    error.remove();
+    calculatorBody.append(output);
+    calculatorBody.append(calculatorNumbers);
+  })
+}
+
+export { errorNode, renderNode };

@@ -9,8 +9,6 @@
  * @return {Node} element итоговый узел DOM
  */
 
-
- // может попробовать сделать массив из двух значений и аккх0ъъ и аккх1ъ
 const viewCalculator = (tag, className, attribute, textElement, attribute2) => {
   const element = document.createElement(tag);
 
