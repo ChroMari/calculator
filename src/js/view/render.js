@@ -8,29 +8,26 @@ import objCalculator from "../bd/calculator-object";
 
 const render = () => {
   const { body } = document;
-  const calculatorBody = viewCalculator('div', 'calculator'); // всё тело калькулятора
+  const calculatorBody = viewCalculator('div', 'calculator');
+  const calculatorOutput = viewCalculator('div', 'calculator__output');
+  const previousOperandTextElement = viewCalculator('div', 'calculator__output-previous');
+  const currentOperandTextElement = viewCalculator('div', 'calculator__output-current', undefined, '0');
 
-  const calculatorOutput = viewCalculator('div', 'output'); // поле где мы видим вычисления
-  const outputContainer = viewCalculator('div', 'output-container'); // контейнер для этих вычислений
-  const previousOperandTextElement = viewCalculator('div', 'previous-operand'); // текущие вычисления
-  const currentOperandTextElement = viewCalculator('div', 'current-operand', undefined, '0'); // итоговый результат
-
-  const calculatorNumbers = viewCalculator('div', 'calculator-numbers'); // поле на котором будут размещены числа и операторы
-  const calculatorContainerNumbers = viewCalculator('div', 'calculator-grid'); // контейнер для чисел
+  const calculatorNumbers = viewCalculator('div', 'calculator__numbers');
+  const calculatorContainerNumbers = viewCalculator('div', 'calculator__numbers--grid');
 
    /* eslint no-restricted-syntax: ["off", "ForOfStatement"] */
   for (const item of objCalculator) {
     const { action, textElement, key } = item;
-    const btn = viewCalculator('button', undefined,  action, textElement, key);
+    const btn = viewCalculator('button', 'calculator__numbers-btn',  action, textElement, key);
     if (!/[0-9]/.test(+btn.textContent)) {
-      btn.classList.add('calculator-action');
+      btn.classList.add('calculator__numbers-btn--operation');
     }
-    calculatorContainerNumbers.append(btn); // добавляем все кнопки
+    calculatorContainerNumbers.append(btn);
   }
 
   calculatorBody.append(calculatorOutput, calculatorNumbers);
-  calculatorOutput.append(outputContainer);
-  outputContainer.append(previousOperandTextElement, currentOperandTextElement);
+  calculatorOutput.append(previousOperandTextElement, currentOperandTextElement);
   calculatorNumbers.append(calculatorContainerNumbers);
 
   body.append(calculatorBody);

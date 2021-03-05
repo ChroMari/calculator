@@ -5,28 +5,26 @@ import Calculator from './js/logic/calculator-logic';
 import { renderNode } from './js/view/calculator-error-view';
 import render from './js/view/render';
 import vanillaTiltView from './js/view/vanillaTilt-view';
-import './styles/style.css';
+import './styles/style.sass';
 import audioSrc from './assets/audio/c.mp3';
 
 const calculatorBody = render();
 
-const previousOperandTextElement = calculatorBody.querySelector('.previous-operand');
-const currentOperandTextElement = calculatorBody.querySelector('.current-operand');
-const output = calculatorBody.querySelector('.output');
-const calculatorNumbers = calculatorBody.querySelector('.calculator-numbers');
-const calculatorGrid = calculatorBody.querySelector('.calculator-grid');
+const previousOperandTextElement = calculatorBody.querySelector('.calculator__output-previous');
+const currentOperandTextElement = calculatorBody.querySelector('.calculator__output-current');
+const output = calculatorBody.querySelector('.calculator__output');
+const calculatorNumbers = calculatorBody.querySelector('.calculator__numbers');
+const calculatorGrid = calculatorBody.querySelector('.calculator__numbers--grid');
 
 const calculator = new Calculator(previousOperandTextElement, currentOperandTextElement);
 
 const audio = new Audio();
-audio.src = audioSrc;
 
 class ButtonCalculator {
   constructor(elem) {
     this._elem = elem;
-    elem.onclick = this.onClick.bind(this);
-    elem.onkeydown = this.onKeydown.bind(this);
-    elem.onkeyup = this.onKeyup.bind(this);
+    elem.onmousedown = this.mouseDown.bind(this);
+    elem.onmouseup = this.mouseUp.bind(this);
   }
 
   allClear () {
@@ -58,52 +56,105 @@ class ButtonCalculator {
     calculator.sqrtOperation();
     return this;
   }
-  
-  onClick (e) {
+
+  addClass(keyBtn) {
+    if (!keyBtn.classList.contains('calculator__numbers-btn--action')) {
+      keyBtn.classList.add('calculator__numbers-btn--action');
+    } 
+    audio.src = audioSrc;
+    audio.currentTime = 0;
+    audio.play();
+    return this;
+  }
+
+  addUpdate(btn) {
+    const isError = calculator.updateDisplay();
+    this.addClass(btn);
+
+    if (isError) {
+      btn.classList.remove('calculator__numbers-btn--action');
+      calculatorNumbers.remove();
+      output.remove();
+      renderNode(output, calculatorNumbers, calculatorBody);
+    }
+  }
+
+  mouseDown(e) {
     const {action} = e.target.dataset;
     const textElement = e.target.textContent;
 
     if (action) {
       this[action](textElement);
-      const isError = calculator.updateDisplay();
-      audio.currentTime = 0;
-      audio.play();
-
-      if (isError) {
-        calculatorNumbers.remove();
-        output.remove();
-        renderNode(output, calculatorNumbers, calculatorBody);
-      }
+      this.addUpdate(e.target);
     }
-  };
+  }
 
-  onKeydown (e) {
-    const button = this._elem.querySelector(`[data_key=${e.code}]`);
-
-    if (button === undefined) return;
-
-    const {action} = button.dataset;
-    const textElement = button.textContent;
-
-    if (action) {
-      this[action](textElement);
-      calculator.updateDisplay();
-      audio.currentTime = 0;
-      audio.play();
-    }
-
-    button.classList.add('playing');
-  };
-
-  onKeyup (e) {
-    const button = this._elem.querySelector(`[data_key=${e.code}]`);
-    if (button === undefined) return;
-    button.classList.remove('playing');
+  mouseUp(e) {
+    e.target.classList.remove('calculator__numbers-btn--action');
+    return this;
   }
 }
 
-(()=>new ButtonCalculator(calculatorGrid))();
+const btnCalculator = new ButtonCalculator(calculatorGrid);
 
 vanillaTiltView(calculatorNumbers);
 
+const code = ['Delete', 'Backspace', 'Digit6', 'NumpadDivide', 'Numpad1', 'Numpad2', 'Numpad3', 'NumpadMultiply', 
+'Numpad4', 'Numpad5', 'Numpad6', 'NumpadAdd', 'Numpad7', 'Numpad8', 'Numpad9', 'NumpadSubtract', 'NumpadDecimal', 
+'Numpad0', 'NumpadEnter', 'Digit7'];
 
+window.addEventListener('keydown', (e) => {
+  const key = e.code;
+
+  if (code.indexOf(key) !== -1) {
+    const keyDiv = calculatorGrid.querySelector(`[data_key="${key}"]`);
+    if (!keyDiv.classList.contains('calculator__numbers-btn--action')) {
+      keyDiv.classList.add('calculator__numbers-btn--action');
+      audio.src = audioSrc;
+      audio.currentTime = 0;
+      audio.play();
+
+      const {action} = keyDiv.dataset;
+      const textElement = keyDiv.textContent;
+      switch (action) {
+        case 'allClear': {
+          btnCalculator.allClear();
+          break;
+        }
+        case 'delete': {
+          btnCalculator.delete();
+          break;
+        } 
+        case 'operation': {
+          btnCalculator.operation(textElement);
+          break;
+        }
+        case 'number': {
+          btnCalculator.number(textElement);
+          break;
+        }
+        case 'equals': {
+          btnCalculator.equals();
+          break;
+        }
+        case 'sqrt': {
+          btnCalculator.sqrt();
+          break;
+        }
+        default: return;
+      }
+      btnCalculator.addUpdate(keyDiv);
+    } 
+  }
+});
+
+window.addEventListener('keyup', (e) => {
+  const key = e.code;
+
+  if (code.indexOf(key) !== -1) {
+    const keyDiv = calculatorGrid.querySelector(`[data_key="${key}"]`);
+    if (keyDiv.classList.contains('calculator__numbers-btn--action')) {
+      keyDiv.classList.remove('calculator__numbers-btn--action');
+    } 
+  }
+});
