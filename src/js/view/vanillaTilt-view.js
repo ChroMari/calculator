@@ -1,3 +1,7 @@
+/**
+ * Визуальная сторонняя библиотека.
+ */
+
 import "../../assets/lib/vanilla-tilt";
 
 /* global VanillaTilt */

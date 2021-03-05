@@ -1,3 +1,9 @@
+/**
+ * Функция errorNode отвечает за рендер диалогового окна с информацией об ошибке вычислений.
+ * 
+ * Функция renderNode вешает на кнопку эвент и его обрабатывает. Также происходит переключение на калькулятор.
+ */
+
 const errorNode = () => {
   const errorContainer = document.createElement('div');
   errorContainer.classList.add('error-container');

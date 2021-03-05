@@ -1,4 +1,8 @@
-const objCalculator = [ // нужно будет клавиши коды для всех подправить
+/**
+ * База данных. При помощи неё формируется клавиатура и работает вся локига кнопок.
+ */
+
+const objCalculator = [
   {
     action: ['data-action', 'allClear'],
     textElement: 'AC',

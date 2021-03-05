@@ -1,3 +1,7 @@
+/**
+ * Класс, который отвечает за логику вычислений калькулятора.
+ */
+
 class Calculator {
   constructor (previousOperandTextElement, currentOperandTextElement) {
     this.previousOperandTextElement = previousOperandTextElement;
@@ -7,11 +11,11 @@ class Calculator {
   }
 
   clear () {
-    this.currentOperand = '0'; // показывает большое число на экране в данный момент
+    this.currentOperand = '0';
     this.previousOperand = '';
     this.operation = undefined;
 
-    this.equals = false; // флаг для знака равно
+    this.equals = false;
   }
 
   delete () {
@@ -25,18 +29,19 @@ class Calculator {
       this.currentOperand = '0';
       this.equals = false;
     }
-    if ((number === '.' && this.currentOperand.includes('.')) || (number === '0' && (this.currentOperand === '0' || this.currentOperand === '-'))) return; // позволяет поставить только одну точку в числе
-   // if (number === '0' && this.currentOperand === '0') return; //позволяет не наставить вначале кучу нулей
-    if(this.currentOperand === '0' && /[1-9]/.test(number)) this.currentOperand = ''; // если у нас число состоит только из 0 то делаем сброс
+    if ((number === '.' && this.currentOperand.includes('.')) || (number === '0' && (this.currentOperand === '0' || this.currentOperand === '-'))) return;
+    if(this.currentOperand === '0' && /[1-9]/.test(number)) this.currentOperand = '';
     if (this.currentOperand === '-' && number === '.') this.currentOperand = '-0';
     this.currentOperand = this.currentOperand.toString() + number.toString();
   }
 
   choseOperation (operation) {
     if (this.equals) this.equals = false;
-    if (this.currentOperand === '0' && operation !== '-') return; // если число не нажали, то он ничего делать не будет
+    if (this.currentOperand === '0' && operation !== '-') {
+      this.operation = operation;
+      return;
+    }
     if (this.currentOperand === '0'  && operation === '-') { 
-      // если мы нажали сразу минус, то этот минус относится к числу
       this.currentOperand = operation;
       return;
     }
@@ -71,13 +76,13 @@ class Calculator {
         computation = prev / current;
         break;
       case '^' : 
-        computation = prev**current; // степень 0.5 нужно отловить ошибку на этот момент
+        computation = prev**current;
         break;
       default:
         return;
     }
 
-    this.currentOperand = +computation.toFixed(10); // отредактировать это место на вычисления
+    this.currentOperand = +computation.toFixed(10);
 
     if (Number.isNaN(this.currentOperand)) {
       this.currentOperand = false;
@@ -94,6 +99,7 @@ class Calculator {
     if (Number.isNaN(current)) return;
 
     this.currentOperand = Math.sqrt(current);
+    this.equals = true;
 
     if (Number.isNaN(this.currentOperand)) {
       this.currentOperand = false;
@@ -109,7 +115,6 @@ class Calculator {
       return true;
     }
 
-    // нужно обработать поведение с плавующей запятой
     this.currentOperandTextElement.innerText = this.currentOperand;
 
     if (this.operation != null) {
