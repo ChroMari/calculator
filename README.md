@@ -3,7 +3,7 @@
 
 Calculator - представляет собой простое приложение, написанное на чистом JavaScript. Вся генерация html происходит из JavaScript. Используется взаимодействие с клавиатурой при помощи keydown и keyup событий. Также активная кнопка подсвечивается цветом и происходит звуковое оповещение при нажатии по кнопке.
 
-![Alt Text](https://raw.githubusercontent.com/ChroMari/calculator/main/)
+![Alt Text](https://raw.githubusercontent.com/ChroMari/calculator/main/calculator-gif.gif)
 
 [Demo](https://chromari-calculator.netlify.app/)
 * HTML5, CSS3.
